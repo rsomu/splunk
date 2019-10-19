@@ -1,0 +1,3 @@
+| rest /services/admin/cacheman | dedup title | rex field=title "\|(?<index>\w+)~" 
+|stats sum(cm:bucket.estimated_size) as InCache by index
+|eval Size=round(InCache/1024/1024/1024,2) |fields index, Size
