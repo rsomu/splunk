@@ -1,0 +1,8 @@
+|dbinspect index=<index_name> |dedup bucketId
+| eval start_time=strftime(startEpoch,"%m/%d/%y %H:%M:%S"), end_time=strftime(endEpoch,"%m/%d/%y %H:%M:%S")
+| where ("<start_time>" >= start_time AND "<start_time>" <= end_time) 
+OR ("<end_time>" >= start_time AND "<end_time>" <= end_time) 
+OR ( start_time >= "<start_time>" AND end_time <= "<end_time>")
+|stats sum(eventCount) as ec sum(sizeOnDiskMB) as mb count as Buckets by index 
+|eval diskinGB=round(mb/1024,2), EventCount=tostring(ec, "commas")
+|fields index, EventCount, diskinGB, Buckets
