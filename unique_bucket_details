@@ -1,0 +1,6 @@
+|dbinspect index=* earliest=1 |dedup bucketId| stats sum(sizeOnDiskMB) as diskTotalinMB count(bucketId) as buckets 
+min(startEpoch) as min_startep max(startEpoch) as max_startep 
+min(endEpoch) as min_endep max(endEpoch) as max_endep  by index, state 
+|eval min_sep=strftime(min_startep,"%m/%d/%y %H:%M:%S"), max_sep=strftime(max_startep,"%m/%d/%y %H:%M:%S"), 
+min_eep=strftime(min_endep,"%m/%d/%y %H:%M:%S"), max_eep=strftime(max_endep,"%m/%d/%y %H:%M:%S") 
+|fields index, state, diskTotalinMB, buckets, min_sep, min_eep, max_sep, max_eep
